@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<article>
+	{% include "account/loginForm.html" %}
+
+	<p class="text-center"><a href="{%comment%} {% url "account:forgotpassword" %} {%endcomment%}#">I forgot my password</a></p>
+
+	</article>
+{% endblock %}

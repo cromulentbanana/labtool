@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load navigation_extras %}
+
+{% block extrahead %}<script src="{{ MEDIA_URL }}js/links.js"></script>{% endblock %}
+{% block title %} - Device links{% endblock %}
+{% block content %}
+
+<article>
+
+
+	<ul class="nav right nav-pills ports-filter">
+		<li class="active"><a href="#">All Ports</a></li>
+		<li><a href="#used">Used Ports</a></li>
+		<li><a href="#unused">Unused Ports</a></li>
+	</ul>
+
+	<h2>Links for <span class="device-info" data-id="{{device.id}}">{{device}}</span></h2>
+</article>
+
+<article>
+	<form method="post" id="link-editing-form" action="{{ request.get_full_path }}">
+		{% csrf_token %}
+		{{ formset.management_form }}
+
+		{{ formset.non_field_errors }}
+
+		{% if saved_instances %}
+			<div class="alert alert-success">
+				The following links have been saved:
+				<ul>{% for instance in saved_instances %}
+					<li>{{ instance }}</li>
+				{% endfor %}</ul>
+			</div>
+		{% endif %}
+		<div class="link-editing-container">
+			<table class="link-table" width="100%">
+
+				<colgroup>
+					<col width="20%">
+					<col width="20">
+					<col width="20%">
+					<col width="20%">
+				</colgroup>
+
+				<thead>
+					<tr>
+						<th colspan=2>Port on this device</th>
+						<th>links to device</th>
+						<th>Port on that device</th>
+						<th colspan=2></th>
+					</tr>
+				</thead>
+
+				<tbody>
+
+
+				{% for form in formset %}
+					{% include 'device/link_form.html' with form=form %}
+				{% endfor %}
+
+				</tbody>
+			</table>
+
+			<div class="loading"> <img src="{{ MEDIA_URL }}img/loading.gif" /> Loading ...</div>
+		</div>
+
+		<p class="text-center">
+			<input type="submit" value="Save Links" class="btn btn-large btn-primary"  />
+		</p>
+
+		<p class="note">
+			To add new links, please use the <a href="{% url "admin:index" %}">Django Admin</a>
+			or our <a href="{% url "device:batch_link_insertion" %}">Batch Link Insertion</a> tool.
+		</p>
+
+	</form>
+</article>
+{% endblock %}

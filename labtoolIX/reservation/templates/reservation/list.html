@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% load navigation_extras %}
+{% block extrahead %}<script src="{{ MEDIA_URL }}js/reservation.js"></script>{% endblock %}
+{% block title %} - Reservation list{% endblock %}
+{% block content %}
+	<article>
+
+	{% url "reservation:current" as current %}
+	{% url "reservation:past" as past%}
+	{% url "reservation:all" as all %}
+		<ul class="nav nav-pills">
+			<li class="{% active request current %}"><a href="{{ current }}">My current reservations</a></li>
+			<li class="{% active request past %}"><a href="{{ past }}">My past reservations</a></li>
+			<li class="{% active request all %}"><a href="{{ all }}">All current reservations</a></li>
+		</ul>
+	</article>
+
+		{% if not my_reservations and not reservations %}
+	<article>
+		There are no reservations.
+	</article>
+		{% endif %}
+
+		{% if my_reservations %}
+
+		<table class="data reservations" id="my-reservations-table">
+			<colgroup>
+				<col width="30%">
+				<col >
+				<col >
+				<col width="160">
+			</colgroup>
+
+			<thead>
+				<tr>
+					<th>Reservation</th>
+					<th>Device</th>
+					<th>Class</th>
+					<th>Model</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+
+			<tbody>
+			{% for reservation in my_reservations %}
+			<tr class="{% cycle '' 'odd' %} res_{{ reservation.id }}" data-id="/api/reservation/{{ reservation.id }}/">
+				<td rowspan="{{ reservation.devices.all|length }}">
+					<p>
+						{% if reservation.is_running %}<span class="label right label-success">Running</span>{% else %}
+						<span class="label right label-warning">Future</span>{% endif %}
+					From {{ reservation.startTime }}<br />
+					To {{ reservation.endTime }} </p>
+
+					<p><div class="btn-group">
+						<a href="javascript:void(0)" class="btn btn-small btn-extend-reservation"><i class="icon-resize-horizontal"></i> Extend reservation</a>
+						<a href="javascript:void(0);" class="btn btn-small btn-terminate-reservation"><i class="icon-ban-circle"></i> End reservation</a>
+					</div></p>
+
+					<p class="text-note"># {{ reservation.id }}</p>
+				</td>
+
+				{% for device in reservation.devices.all %}
+
+					<td>{{ device.name }}</td>
+					<td>{% for class in device.deviceClasses.all %} {{ class }} {% endfor %}</td>
+					<td>{{ device.model }}</td>
+					<td nowrap>
+						<div class="btn-group dropdown">
+							{% with device.getValidBootmodes as bms %}
+							<a href="javascript:void(0)" class="btn btn-mini dropdown-bootmode dropdown-toggle{% if not bms %} disabled{%endif%}{% if device.bootmode.is_destructive %} btn-warning{%endif%}" role="button" data-toggle="dropdown" data-target="#">
+								<i class="icon-dashboard"></i>
+								{% if not bms %}n/a
+								{% else %}{{ device.bootmode|default_if_none:"not set"|truncatechars:12  }} <i class="icon-caret-down"></i>
+								{%endif%}
+							</a>
+							{% if bms %}
+							<ul class="dropdown-menu" role="menu">
+								{% for bootmode in bms %}
+								<li{% if device.bootmode == bootmode %} class="active"{% endif %}><a href="javascript:void(0)" class="btn-set-bootmode" data-device-id="/api/device/{{ device.id }}/" data-id="/api/bootmode/{{ bootmode.id }}/" data-destructive="{{ bootmode.is_destructive }}">
+									{% if bootmode.is_destructive %}<i class="icon-warning-sign"></i>
+									{%else%}<i class="icon-wrench"></i>{%endif%}
+									{{ bootmode.name }}
+								</a></li>
+								{% endfor %}
+							</ul>
+							{% endif %}
+							{% endwith %}
+							
+							<a href="javascript:void(0);" class="btn btn-mini btn-danger btn-powercycle-device" data-id="/api/device/{{ device.id }}/"><i class="icon-off"></i> Powercycle</a>
+						</div>
+
+						<img class="loading-indicator" src="/media/img/loading.gif" valign="middle" />
+					</td>
+				</tr>
+				<tr class="res_{{ reservation.id }}" >
+				{% endfor %}
+			</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+		{% endif %}
+
+		{% if reservations %}
+
+		<table class="data reservations" id="all-reservations-table">
+			<colgroup>
+				<col width="15%">
+				<col width="30%">
+				<col >
+				<col >
+			</colgroup>
+
+			<thead>
+				<tr>
+					<th>User</th>
+					<th>Reservation</th>
+					<th>Device</th>
+					<th>Class</th>
+					<th>Model</th>
+				</tr>
+			</thead>
+
+			<tbody>
+			{% for reservation in reservations %}
+			<tr class="{% cycle '' 'odd' %}">
+				<td rowspan="{{ reservation.devices.all|length }}">{{ reservation.user }}</td>
+				<td rowspan="{{ reservation.devices.all|length }}">
+					
+					{% if reservation.is_running %}
+					<span class="label right label-success">Running</span>
+					{% elif reservation.is_terminated %}
+					<span class="label right">Terminated</span>
+					{% else %}
+					<span class="label right label-warning">Future</span>{% endif %}
+
+					From {{ reservation.startTime }}<br />
+					To {{ reservation.endTime }} 
+
+					<p class="text-note"># {{ reservation.id }}</p>
+				</td>
+
+				{% for device in reservation.devices.all %}
+
+					<td>{{ device.name }}</td>
+					<td>{% for class in device.deviceClasses.all %} {{ class }} {% endfor %}</td>
+					<td>{{ device.model }}</td>
+				</tr>
+				<tr>
+				{% endfor %}
+			</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	<article>
+		{% endif %}
+	</article>
+{% endblock %}

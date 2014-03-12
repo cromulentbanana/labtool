@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %} - Link Batch Insertion{% endblock %}
+{% block extrahead %}<script src="{{ MEDIA_URL }}js/batch_links.js"></script>{% endblock %}
+{% block content %}
+
+<article>
+	<h2>Batch Link Insertion</h2>
+</article>
+
+{% if isSaved %}
+
+<article>
+	<div class="alert alert-success">
+		{{ numbers.links_saved }} links have been saved. {{ numbers.links_removed }} old links have been removed.
+	</div>
+
+	<a href="{{ request.get_full_path }}">Start over</a>
+</article>
+
+{% else %}
+
+<article class="highlight">
+	Syntax: <code>{{syntax}}</code>
+</article>
+
+<article>
+	<form method="post" class="form-batch-links" id="batch-link-insertion-form" action="{{ request.get_full_path }}">
+		{% csrf_token %}
+		
+		<div class="grid-2">
+			<div class="fields">
+
+				<h4>{{form.text.label}}</h4>
+				<div style="margin-bottom: 1em;">
+					{{form.text}}
+				</div>
+
+				<input type="submit" name="parse" value="Parse input" class="btn btn-large"  />
+
+			</div>
+			<div class="parsed">
+				{% ifequal request.method 'POST' %}
+					<h4>Parsed</h4>
+
+					{% if form.text.errors %}
+						{{form.text.errors}}
+
+						<p>No links are parsed as long as there are any errors.</p>
+					{% endif %}
+
+					{% if parsed_links %}
+						<ul class="links-list">
+						{% for link_info in parsed_links %}
+							<li>
+								<span class="line-number">{{ link_info.line }}</span>
+								{{ link_info.link }}
+								{% if link_info.conflicts %}
+								<span class="conflict_info">
+									Overwrites these existing links:
+									<ul>
+									{% for link in link_info.conflicts %}
+										<li>{{link}}</li>
+									{% endfor %}
+									</ul>
+								</span>
+								{% endif %}</li>
+						{% endfor %}
+						</ul>
+
+						<input type="submit" name="save" value="Save {{ parsed_links|length }} links" class="btn btn-large btn-primary"  />
+					{% endif %}
+
+				{% endifequal %}
+			</div>
+		</div>
+		
+	</form>
+</article>
+
+{% endif %}
+
+{% endblock %}

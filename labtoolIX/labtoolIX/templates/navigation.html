@@ -1,0 +1,24 @@
+{% load navigation_extras %}{% spaceless %}
+
+{% url "device:start" as device %}
+{% url "reservation:current" as reservation %}
+{% url "account:start" as profile %}
+{% url "account:login" as login %}
+{% url "account:logout" as logout %}
+{% url "account:user_list" as accounts %}
+
+{% endspaceless %}
+			<ul class="nav nav-main">
+				{% spaceless %}
+			{% if user.is_authenticated %}
+				<li><a href="{{ device }}" class="icon-list-alt {% active_or_parent request device %}">Devices</a></li>
+				<li><a href="{{ reservation }}" class="icon-book {% active_or_parent request reservation %}">Reservations</a></li>
+				<li><a href="{{ profile }}" class="icon-user {% active request profile %}">Profile</a></li>
+				{% if user.is_staff %}<li><a href="{{ accounts }}" class="icon-group {% active_or_parent request accounts %}">Accounts</a></li>{% endif %}
+				{% if user.is_superuser %}<li><a href="/admin/" class="icon-lock">Admin</a></li>{% endif %}
+				<li><a href="{{ logout }}" class="icon-key {% active_or_parent request logout %}">Logout</a></li>
+			{% else %}
+				<li><a href="{{ login }}" class="icon-key {% active_or_parent request login %}">Login</a></li>
+			{% endif %}
+			{% endspaceless %}
+			</ul>

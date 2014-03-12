@@ -1,0 +1,30 @@
+		<div class="cf link-box">
+			<div class="col">
+				<label>Port on this device</label> <br />
+				<select name="switchPortA" class="switchPortA"{% if link %} data-selected="{{ link.switchPortA.id }}"{% endif %}>
+					<option>- Choose existing -</option>
+				</select>
+				<input type="text" class="add-new-input" name="switchPortA.new" placeholder="Add new"/>
+			</div>
+			<div class="left relation-icon">
+				<i class='icon-resize-horizontal'></i>
+			</div>
+			<div class="col">
+				<label>Links to device</label> <br />
+				<select name="deviceB" class="deviceB"{% if link %} data-selected="{{ link.switchPortB.device.id }}"{% endif %}>
+					<option>- Choose existing -</option>
+					{% for device in all_devices %}
+					<option value="{{ device.id }}" {% if device.id == link.switchPortB.device.id %}selected{% endif %}>{{device.name}}</option>
+					{% endfor %}
+				</select>
+			</div>
+			<div class="col">
+				<label>Port on that device</label> <br />
+				<select name="switchPortB" class="switchPortB" {% if link %} data-selected="{{ link.switchPortB.id }}"{% else %}disabled{% endif %}>
+					<option>- Choose existing -</option>
+				</select>
+				<input type="text" class="add-new-input" placeholder="Add new"/>
+			</div>
+			<p class="form-message"></p>
+			<a class="btn-reset icon-undo" href="javascript:void(0)">Reset changes</a>
+		</div>

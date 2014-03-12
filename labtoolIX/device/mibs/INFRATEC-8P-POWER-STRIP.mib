@@ -1,0 +1,112 @@
+--
+-- MIB module for
+--
+-- Power Module IP
+--
+-- Version 2.02
+--
+--
+
+PM-IP-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+	enterprises, OBJECT-TYPE FROM RFC1155-SMI
+	TRAP-TYPE FROM RFC-1215;  
+
+
+infratec	OBJECT IDENTIFIER ::= { enterprises 1909 }
+pmip		OBJECT IDENTIFIER ::= { infratec 11 }
+pmipOutlet	OBJECT IDENTIFIER ::= { pmip 1 }
+
+
+
+
+pmipOutletTable OBJECT-TYPE
+	SYNTAX  SEQUENCE OF PmipOutletEntry
+	ACCESS  not-accessible
+	STATUS  mandatory
+	DESCRIPTION
+		"The table used for describing the outlets"
+	::= { pmipOutlet 1 }
+
+pmipOutletEntry OBJECT-TYPE
+	SYNTAX  PmipOutletEntry
+	ACCESS  not-accessible
+	STATUS  mandatory
+	DESCRIPTION
+		"Each entry contains the description of one outlet"
+	INDEX   { pmipOutletIndex }
+	::= { pmipOutletTable 1 }
+
+PmipOutletEntry ::=
+	SEQUENCE {
+		pmipOutletIndex INTEGER,
+		pmipOutletDescr OCTET STRING (SIZE (0..8)),
+		pmipOutletState INTEGER,
+		pmipOutletPulseTime INTEGER,
+		pmipOutletPulse INTEGER
+	}
+
+pmipOutletIndex OBJECT-TYPE
+	SYNTAX  INTEGER (1..8)
+	ACCESS  read-only
+	STATUS  mandatory
+	DESCRIPTION
+		"Index of outlet"
+	::= { pmipOutletEntry 1 }
+
+pmipOutletDescr OBJECT-TYPE
+	SYNTAX  OCTET STRING (SIZE (0..8)) 
+	ACCESS  read-write
+	STATUS  mandatory
+	DESCRIPTION
+		"Name of the outlet"
+	::= { pmipOutletEntry 2 }
+
+pmipOutletState OBJECT-TYPE
+	SYNTAX  INTEGER {
+		off(1),
+		on(2)
+	}
+	ACCESS  read-write
+	STATUS  mandatory
+	DESCRIPTION
+		"Current state of the outlet"
+	::= { pmipOutletEntry 3 }
+
+pmipOutletPulseTime OBJECT-TYPE
+	SYNTAX  INTEGER (1..36000)
+	ACCESS  read-write
+	STATUS  mandatory
+	DESCRIPTION
+		"Pulse time of the outlet"
+	::= { pmipOutletEntry 4 }
+
+pmipOutletPulse OBJECT-TYPE
+	SYNTAX  INTEGER {
+		pulse(1)
+	}
+	ACCESS  read-write
+	STATUS  mandatory
+	DESCRIPTION
+		"Pulse the outlet"
+	::= { pmipOutletEntry 5 }
+
+
+-- Trap
+
+pmipOutletOnTrap TRAP-TYPE
+	ENTERPRISE pmip
+	VARIABLES { pmipOutletIndex, pmipOutletDescr }
+	DESCRIPTION
+		"An outlet was switched on by someone"
+	::= 1
+
+pmipOutletOffTrap TRAP-TYPE
+	ENTERPRISE pmip
+	VARIABLES { pmipOutletIndex, pmipOutletDescr }
+	DESCRIPTION
+		"An outlet was switched off by someone"
+	::= 2
+
+END

@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block extrahead %}<script src="{{ MEDIA_URL }}js/device.js"></script>{% endblock %}
+{% block title %} - Device list{% endblock %}
+{% block content %}
+
+<div class="device-table-header affix cf">
+
+	<article style="margin-top:0;margin-bottom:0;padding-top:20px;padding-bottom:1em;float:left">
+		
+		<input type="text" id="livesearch" name="q" placeholder="Live search ..." />
+		<img class="loading-indicator" id="livesearch-loading" src="{{ MEDIA_URL }}img/loading.gif" />
+
+	</article>
+
+	<div class="reservation-container">
+		<div class="right">
+			<!-- FIXME: Only show next button if user has reservations -->
+			<a href="#" class="btn add-to-existing-reservation"><i class="icon-calendar"></i> Add to existing reservation</a>
+			<a href="#" class="btn btn-primary reserve-select-date"><i class="icon-calendar"></i> Select Date</a>
+		</div>
+		<strong>You are going to reserve these devices:</strong><br />
+		<ul class="reservation-container-list" id="reservation-device-list"></ul>
+	</div>
+
+</div>
+<div class="spacer" style="height:66px;"></div>
+
+<div id="reservation-modal">
+	<div class="inline-form">
+	<p>
+		<label>from</label>
+		<input type="text" name="startDate" class="input-startDate" value="now" />
+	</p>
+	<p>
+		<label>until</label>
+		<input type="text" name="endDate" class="input-endDate" value="+2weeks" />
+	</p>
+
+	<div class="datepicker"></div>
+
+	</div>
+</div>
+
+<table id="device-table" class="data">
+	<colgroup>
+		<col width="20%">
+		<col >
+		<col >
+		<col width="15%">
+		<col width="160">
+	</colgroup>
+	<thead data-offset="66">
+		<tr>
+			<th class="header headerSortDown" data-orderby="name">
+				<a href="#">Name</a>
+			</th>
+			<th>
+				<a href="#">Device class</a>
+			</th>
+			<th data-orderby="model">
+				<a href="#">Model</a>
+			</th>
+			<th>
+				<a href="#">Status</a>
+			</th>
+			<th>
+				Actions
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<!-- Populated via API, see MEDIA/js/device.js listDevices -->
+		<tr><td colspan="100%" align="center">
+			<img class="loading-indicator" id="livesearch-loading" src="/media/img/loading.gif" />
+			Loading ...
+		</td></tr>
+	</tbody>
+</table>
+<article class="text-center cf load-actions">
+	<div class="right" id="page-status">Showing %d of %d entries</div>
+	<a href="#" class="btn btn-primary btn-load-more">Load more</a>
+</article>
+
+
+{% endblock %}

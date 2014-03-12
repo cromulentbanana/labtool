@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>labfront {% block title %}{% endblock %}</title>
+
+		<link rel="stylesheet" href="{{ MEDIA_URL }}css/font-awesome.css">
+		<link rel="stylesheet" href="{{ MEDIA_URL }}css/style.css">
+
+		<script src="{{ MEDIA_URL }}js/jquery.js"></script>
+		<script src="{{ MEDIA_URL }}js/plugins.js"></script>
+		<script src="{{ MEDIA_URL }}js/api.js"></script>
+		<script src="{{ MEDIA_URL }}js/bootstrap.min.js"></script>
+		<script src="{{ MEDIA_URL }}js/main.js"></script>
+		{% if request.user.id %}<script>
+		var user = {
+			id: {{ request.user.id }},
+			name: '{{ request.user }}',
+			is_superuser: {{ request.user.is_superuser|lower }}
+		};
+		</script>{% endif %}
+		{% block extrahead %}{% endblock %}
+	</head>
+	<body>
+		<header>   
+			{% include "navigation.html" %}
+
+			<h1>labfront</h1>
+		</header>
+
+		<section class="main">
+
+			{% block content %}{% endblock %}
+		</section><!-- .main -->
+	</body>
+</html>

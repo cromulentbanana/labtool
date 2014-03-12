@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>labfront</title>
+
+		<!-- font will be moved to local for production -->
+		<link href='http://fonts.googleapis.com/css?family=Maven+Pro:400,500' rel='stylesheet' type='text/css'>
+
+		<link rel="stylesheet" href="css/style.css">
+		<link rel="stylesheet" href="css/font-awesome.css">
+	</head>
+	<body>
+		<header>
+			
+			<ul class="nav nav-main">
+				<li><a href="#" class="icon-list-alt active">Devices</a></li><!--
+				--><li><a href="#" class="icon-book">Reservations</a></li><!--
+				--><li><a href="#" class="icon-key">Change Password</a></li><!--
+				--><li><a href="#" class="icon-lock">Admin</a></li>
+			</ul>
+
+			<h1>labfront</h1>
+
+		</header>
+
+		<section class="main">
+
+			<div class="filter">
+				<form method="post">
+
+				<h2>Search</h2>
+				<input type="search" name="query" />
+
+				</form>
+			</div><!-- .filter -->
+
+			<table class="devices">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Model</th>
+						<th>Status</th>
+						<th>Ports</th>
+						<th>Details</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>loadgen101</td>
+						<td>loadgen</td>
+						<td><span class="status-free">free</span></td>
+						<td>console, eth0, eth1, … </td>
+						<td><a href="#" class="more-link">Show</a></td>
+					</tr>
+					<tr>
+						<td>loadgen101</td>
+						<td>loadgen</td>
+						<td><span class="status-reserved">reserved</span></td>
+						<td>console, eth0, eth1, …</td>
+						<td><a href="#" class="more-link">Show</a></td>
+					</tr>
+					<tr>
+						<td>loadgen101</td>
+						<td>loadgen</td>
+						<td><span class="status-free">free</span></td>
+						<td>console, eth0, eth1, …</td>
+						<td><a href="#" class="more-link">Show</a></td>
+					</tr>
+				</tbody>
+			</table>
+
+		</section><!-- .main -->
+
+	</body>
+</html>

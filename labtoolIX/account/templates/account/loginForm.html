@@ -1,0 +1,15 @@
+{% if form.errors %}
+	<div class="alert alert-error alert-block">
+		<h4 class="alert-heading">Your login credentials are incorrect</h4>
+		<p>Please try again.</p>
+	</div>
+{% endif %}
+<form class="form-horizontal" method="post" action="">
+	{% csrf_token %}
+	<input type="hidden" name="next" value="{{ next }}" />
+
+	<fieldset class="login-form">
+		{% include "form.html" with form=form %}
+		<input type="submit" class="btn btn-primary" value="Anmelden" />
+	</fieldset>
+</form>

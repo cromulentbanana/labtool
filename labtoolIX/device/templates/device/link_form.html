@@ -1,0 +1,51 @@
+		<tr class="link-row {% if not form.switchPortB.value %}filter-unused{% else %}filter-used{% endif %}">
+			<td>
+				{{ form.id }}
+				{{ form.deviceA }}
+
+				{{ form.switchPortA.as_hidden }}
+				
+				{% for instance in available_switchports %}
+					{% ifequal instance.pk form.switchPortA.value|add:"0" %} {{ instance.name }}{% endifequal %}
+				{% endfor %}
+				<!--<select name="{{ form.switchPortA.html_name }}" class="switchPortA"{% if form.switchPortA.value %} data-selected="{{ form.switchPortA.value }}"{% endif %}>
+					<option value="0">- Choose existing -</option>
+				</select>
+				<input type="text" class="add-new-input" name="{{ form.switchPortAcreate.html_name }}" placeholder="Add new"/>
+				-->
+			</td>
+			<td class="relation-icon">
+				<i class='icon-resize-horizontal'></i>
+			</td>
+			<td>
+				
+				<select class="deviceB" name="{{ form.deviceB.html_name }}" {% if form.deviceB.value %} data-selected="{{ form.deviceB.value }}"{% endif %}>
+					<option value="0">- Choose existing -</option>
+					{% for instance in available_devices %}
+						<option value="{{ instance.pk }}" {% ifequal instance.pk form.deviceB.value|add:"0" %}selected{% endifequal %}>{{ instance.name }}</option>
+					{% endfor %}
+				</select>
+
+			</td>
+			<td>
+				{{ form.switchPortB.as_hidden }}
+				<select name="{{ form.switchPortB.html_name }}" class="switchPortB" {% if form.switchPortB.value %} data-selected="{{ form.switchPortB.value }}"{% else %}disabled{% endif %}>
+					<option value="0">- Choose existing -</option>
+				</select>
+				<input type="text" class="add-new-input" name="{{ form.switchPortBcreate.html_name }}" placeholder="Add new"/>
+
+			</td>
+			<td class="form-message"></td>
+			<td><a class="btn-reset icon-undo" href="javascript:void(0)">Reset changes</a></td>
+		</tr>
+		{% if form.errors %}
+		<tr class="error-row">
+			<td colspan="100%">
+				<ul class="errorlist">
+					{% for key, value in form.errors.items %}
+					<li>{% ifnotequal key '__all__' %}{{ key }}{% endifnotequal %}&nbsp;{{ value }}</ul>
+					{% endfor %}
+				</ul>
+			</td>
+		</tr>
+		{% endif %}
